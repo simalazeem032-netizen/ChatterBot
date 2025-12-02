@@ -4,10 +4,10 @@ Standalone Console Chatbot - No Flask Required!
 Perfect for running in online terminals.
 
 Usage:
-    py chatbot_console.py
+    py chatbot.py
     
 Or in PowerShell:
-    .\chatbot_console.py
+    python chatbot.py
 
 Features:
 - Classes: Multiple OOP classes

@@ -1,9 +1,3 @@
 [build]
-  publish = "templates"
-  command = "echo 'Static site - no build needed'"
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-
+  publish = "."
+  command = "echo 'Terminal chatbot - no build needed'"
