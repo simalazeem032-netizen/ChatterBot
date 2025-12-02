@@ -1,13 +1,7 @@
-# app.py
-from flask import Flask, request, jsonify, render_template
 from difflib import SequenceMatcher
+import json
 
-# Initialize Flask app
-app = Flask(__name__, static_folder='static', template_folder='templates')
-
-# -----------------------------
 # FAQ Database
-# -----------------------------
 faq_database = [
     {
         "question": "What is the flight time of this drone?",
@@ -56,9 +50,6 @@ HELPLINE_MESSAGE = (
     "Please visit https://www.comsats.edu.pk/ for more details."
 )
 
-# -----------------------------
-# Matching functions
-# -----------------------------
 def similarity(a, b):
     """Calculate similarity ratio between two strings."""
     return SequenceMatcher(None, a.lower(), b.lower()).ratio()
@@ -86,36 +77,58 @@ def find_best_match(user_input):
     
     return best_match, best_score
 
-# -----------------------------
-# Routes
-# -----------------------------
-@app.route("/")
-def index():
-    """Serve the main HTML page."""
-    return render_template("index.html")
+def handler(event, context):
+    """Netlify serverless function handler."""
+    # Handle CORS
+    headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Content-Type': 'application/json'
+    }
 
-@app.route("/chat", methods=["GET", "POST"])
-def chat():
-    """Handle chat requests."""
-    if request.method == "POST":
-        data = request.get_json()
-        user_input = data.get("user_input", "").strip()
-    else:
-        user_input = request.args.get("user_input", "").strip()
-    
-    if not user_input:
-        return jsonify({"response": "Please ask a question."})
-    
-    # Find best match
-    match, confidence = find_best_match(user_input)
-    
-    # Use confidence threshold
-    if match and confidence >= 0.4:
-        response_text = match["answer"]
-    else:
-        response_text = HELPLINE_MESSAGE
-    
-    return jsonify({"response": response_text})
+    # Handle preflight OPTIONS request
+    if event['httpMethod'] == 'OPTIONS':
+        return {
+            'statusCode': 200,
+            'headers': headers,
+            'body': ''
+        }
 
-if __name__ == "__main__":
-    app.run(debug=True)
+    try:
+        # Parse request body
+        if event.get('body'):
+            body = json.loads(event['body'])
+            user_input = body.get('user_input', '').strip()
+        else:
+            user_input = event.get('queryStringParameters', {}).get('user_input', '').strip()
+
+        if not user_input:
+            return {
+                'statusCode': 200,
+                'headers': headers,
+                'body': json.dumps({"response": "Please ask a question."})
+            }
+
+        # Find best match
+        match, confidence = find_best_match(user_input)
+
+        # Use confidence threshold
+        if match and confidence >= 0.4:
+            response_text = match["answer"]
+        else:
+            response_text = HELPLINE_MESSAGE
+
+        return {
+            'statusCode': 200,
+            'headers': headers,
+            'body': json.dumps({"response": response_text})
+        }
+
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'headers': headers,
+            'body': json.dumps({"response": f"Error: {str(e)}"})
+        }
+
