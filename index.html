@@ -3,143 +3,535 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drone FAQ Chatbot - Terminal Version</title>
+    <title>Drone FAQ Chatbot</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+        
         body {
-            font-family: 'Courier New', monospace;
-            background: #1e1e1e;
-            color: #00ff00;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 20px;
-            line-height: 1.6;
         }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: #000;
-            border: 2px solid #00ff00;
+        
+        .chat-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 600px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             padding: 20px;
-            border-radius: 5px;
-        }
-        h1 {
-            color: #00ff00;
-            margin-bottom: 20px;
             text-align: center;
         }
-        .terminal {
-            background: #000;
-            border: 1px solid #00ff00;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 5px;
-            font-family: 'Courier New', monospace;
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
         }
-        .command {
-            color: #00ff00;
-            margin: 10px 0;
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
         }
-        .comment {
-            color: #888;
-            font-style: italic;
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
         }
-        .section {
-            margin: 30px 0;
-            padding: 15px;
-            border-left: 3px solid #00ff00;
+        
+        .message {
+            margin-bottom: 15px;
+            display: flex;
         }
-        code {
-            background: #1e1e1e;
-            padding: 2px 5px;
-            border-radius: 3px;
+        
+        .message.user {
+            justify-content: flex-end;
         }
-        a {
-            color: #00ff00;
-            text-decoration: underline;
+        
+        .message.bot {
+            justify-content: flex-start;
         }
-        ul {
-            margin-left: 20px;
-            margin-top: 10px;
+        
+        .message-content {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            word-wrap: break-word;
         }
-        li {
-            margin: 5px 0;
+        
+        .message.user .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .message.bot .message-content {
+            background: white;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .input-area {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 10px;
+        }
+        
+        #userInput {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 14px;
+            outline: none;
+        }
+        
+        #userInput:focus {
+            border-color: #667eea;
+        }
+        
+        #sendButton {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        #sendButton:hover {
+            opacity: 0.9;
+        }
+        
+        .suggestions {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .suggestions h3 {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        .suggestion-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .suggestion-chip {
+            padding: 6px 12px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .suggestion-chip:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🚁 Drone FAQ Chatbot - Terminal Version</h1>
+    <div class="chat-container">
+        <div class="header">
+            <h1>🚁 Drone FAQ Chatbot</h1>
+            <p>Ask me anything about the drone!</p>
+        </div>
         
-        <div class="section">
-            <h2>📋 About</h2>
-            <p>This is a terminal-based chatbot demonstrating Object-Oriented Programming principles:</p>
-            <ul>
-                <li>Classes: Multiple OOP classes</li>
-                <li>Inheritance: Base classes with derived classes</li>
-                <li>Polymorphism: Same interface, different implementations</li>
-                <li>Functions: Utility functions and methods</li>
-                <li>Comments: Comprehensive documentation</li>
-            </ul>
-        </div>
-
-        <div class="section">
-            <h2>🚀 How to Run</h2>
-            <div class="terminal">
-                <div class="command"># Windows</div>
-                <code>py chatbot.py</code>
-                
-                <div class="command" style="margin-top: 15px;"># Linux/Mac</div>
-                <code>python3 chatbot.py</code>
-                
-                <div class="command" style="margin-top: 15px;"># Online Terminals (Replit, Codespaces, etc.)</div>
-                <code>python chatbot.py</code>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot">
+                <div class="message-content">
+                    Hello! 👋 I'm here to help you learn about drones. Ask me any question!
+                </div>
             </div>
         </div>
 
-        <div class="section">
-            <h2>💬 Usage</h2>
-            <div class="terminal">
-                <div class="comment"># After running, you can:</div>
-                <div>• Type your question about the drone</div>
-                <div>• Type <code>help</code> to see all questions</div>
-                <div>• Type <code>exit</code> to quit</div>
+        <div class="suggestions">
+            <h3>Try asking:</h3>
+            <div class="suggestion-chips">
+                <div class="suggestion-chip" onclick="askQuestion('What is the flight time?')">Flight time</div>
+                <div class="suggestion-chip" onclick="askQuestion('What is the maximum range?')">Maximum range</div>
+                <div class="suggestion-chip" onclick="askQuestion('Does it have GPS?')">GPS</div>
+                <div class="suggestion-chip" onclick="askQuestion('What camera does it have?')">Camera</div>
             </div>
         </div>
 
-        <div class="section">
-            <h2>📝 Example Questions</h2>
-            <ul>
-                <li>What is the flight time of this drone?</li>
-                <li>What is the maximum range?</li>
-                <li>Does this drone have GPS?</li>
-                <li>What camera resolution does it support?</li>
-                <li>Is the camera removable or upgradeable?</li>
-                <li>What is the payload capacity?</li>
-                <li>What is the maximum speed?</li>
-                <li>Is it waterproof or weather-resistant?</li>
-            </ul>
-        </div>
-
-        <div class="section">
-            <h2>📦 Requirements</h2>
-            <p>• Python 3.6+</p>
-            <p>• No external dependencies (uses only Python standard library)</p>
-        </div>
-
-        <div class="section">
-            <h2>📁 Files</h2>
-            <p><code>chatbot.py</code> - Main chatbot code (terminal version)</p>
-            <p><code>README.md</code> - Documentation</p>
-        </div>
-
-        <div class="section">
-            <h2>🌐 Repository</h2>
-            <p>View the code on GitHub: <a href="https://github.com/simalazeem032-netizen/ChatterBot" target="_blank">ChatterBot Repository</a></p>
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Type your question here..." onkeypress="handleKeyPress(event)">
+            <button id="sendButton" onclick="sendMessage()">Send</button>
         </div>
     </div>
+
+    <script>
+        // ============================================================================
+        // FAQ DATA - All the questions and answers the chatbot knows
+        // ============================================================================
+        const FAQ_DATA = [
+            {
+                question: "What is the flight time of this drone?",
+                answer: "The drone can fly for 28-32 minutes on one battery! It depends on wind and how much weight it carries.",
+                keywords: ["flight", "time", "battery", "minutes", "duration", "how long"]
+            },
+            {
+                question: "What is the maximum range?",
+                answer: "You can fly the drone up to 6-8 kilometers away! That's like 6-8 football fields!",
+                keywords: ["maximum", "range", "distance", "kilometers", "km", "how far"]
+            },
+            {
+                question: "Does this drone have GPS?",
+                answer: "Yes! It has GPS and GLONASS. This helps it know exactly where it is and stay in one place!",
+                keywords: ["gps", "glonass", "positioning", "navigation", "location"]
+            },
+            {
+                question: "What camera resolution does it support?",
+                answer: "It has a super clear 4K camera! That means very sharp videos and photos. It also has a gimbal to keep the camera steady.",
+                keywords: ["camera", "resolution", "4k", "ultra", "hd", "gimbal", "fps", "video"]
+            },
+            {
+                question: "Is the camera removable or upgradeable?",
+                answer: "Yes! You can remove the camera and upgrade it to a better one if you want. It's easy to change!",
+                keywords: ["camera", "removable", "upgradeable", "upgrade", "compatible", "change"]
+            },
+            {
+                question: "What is the payload capacity?",
+                answer: "The drone can carry up to 500-700 grams safely. That's about the weight of a small water bottle!",
+                keywords: ["payload", "capacity", "weight", "carry", "grams", "how much"]
+            },
+            {
+                question: "What is the maximum speed?",
+                answer: "It can fly super fast - up to 60 km/h in Sport Mode! That's faster than most cars in the city!",
+                keywords: ["maximum", "speed", "km/h", "sport", "mode", "how fast"]
+            },
+            {
+                question: "Is it waterproof or weather-resistant?",
+                answer: "It's weather-resistant (IP43), which means it can handle light rain and dust. But don't fly it in heavy rain!",
+                keywords: ["waterproof", "weather", "resistant", "rain", "dust", "ip43", "water"]
+            }
+        ];
+
+        // Default message when chatbot doesn't know the answer
+        const HELPLINE_MESSAGE = "I'm still learning! Please visit https://www.comsats.edu.pk/ for more information.";
+
+        // ============================================================================
+        // BASE CLASS - This is like a template for other classes
+        // ============================================================================
+        
+        /**
+         * Base class for matching strategies
+         * This is an ABSTRACT class - it defines what all matchers should do
+         * Other classes will inherit from this and implement their own way
+         */
+        class MatcherStrategy {
+            /**
+             * Calculate how similar the user's question is to an FAQ question
+             * This method will be overridden by child classes (polymorphism!)
+             * 
+             * @param {string} userInput - What the user typed
+             * @param {object} faqItem - One FAQ question/answer pair
+             * @returns {number} - A score from 0 to 1 (higher = more similar)
+             */
+            calculateScore(userInput, faqItem) {
+                // This is just a template - child classes will do the real work
+                throw new Error("This method must be implemented by child classes!");
+            }
+        }
+
+        // ============================================================================
+        // CHILD CLASSES - These inherit from MatcherStrategy (INHERITANCE!)
+        // ============================================================================
+        
+        /**
+         * Matches questions by comparing how similar the words are
+         * INHERITS from MatcherStrategy
+         */
+        class SimilarityMatcher extends MatcherStrategy {
+            /**
+             * Calculate score by comparing how similar the text is
+             * This is POLYMORPHISM - same method name, different implementation!
+             */
+            calculateScore(userInput, faqItem) {
+                const question = faqItem.question.toLowerCase();
+                const input = userInput.toLowerCase();
+                
+                // Simple similarity check - count matching words
+                const inputWords = input.split(' ');
+                const questionWords = question.split(' ');
+                let matches = 0;
+                
+                for (let word of inputWords) {
+                    if (questionWords.includes(word) && word.length > 2) {
+                        matches++;
+                    }
+                }
+                
+                // Return score between 0 and 1
+                return Math.min(matches / Math.max(inputWords.length, questionWords.length), 1);
+            }
+        }
+
+        /**
+         * Matches questions by checking if keywords match
+         * INHERITS from MatcherStrategy
+         * This shows POLYMORPHISM - same method name, different way of doing it!
+         */
+        class KeywordMatcher extends MatcherStrategy {
+            /**
+             * Calculate score by checking keyword matches
+             * POLYMORPHISM - same interface, different implementation!
+             */
+            calculateScore(userInput, faqItem) {
+                const keywords = faqItem.keywords || [];
+                const input = userInput.toLowerCase();
+                
+                if (keywords.length === 0) return 0;
+                
+                // Count how many keywords are in the user's input
+                let matches = 0;
+                for (let keyword of keywords) {
+                    if (input.includes(keyword.toLowerCase())) {
+                        matches++;
+                    }
+                }
+                
+                // Return percentage of keywords found
+                return matches / keywords.length;
+            }
+        }
+
+        /**
+         * Combines both matching strategies for better results
+         * INHERITS from MatcherStrategy
+         * Uses COMPOSITION - it contains other matchers inside it!
+         */
+        class HybridMatcher extends MatcherStrategy {
+            /**
+             * Constructor - runs when we create a new HybridMatcher
+             * This is where we set up the matchers we'll use
+             */
+            constructor() {
+                super(); // Call parent class constructor
+                // COMPOSITION: This class contains other matcher objects
+                this.similarityMatcher = new SimilarityMatcher();
+                this.keywordMatcher = new KeywordMatcher();
+            }
+            
+            /**
+             * Calculate score using BOTH matchers and combine them
+             * POLYMORPHISM - we call the same method on different objects!
+             */
+            calculateScore(userInput, faqItem) {
+                // Use both matchers (polymorphism - same method name!)
+                const similarityScore = this.similarityMatcher.calculateScore(userInput, faqItem);
+                const keywordScore = this.keywordMatcher.calculateScore(userInput, faqItem);
+                
+                // Combine scores - 70% similarity, 30% keywords
+                return (similarityScore * 0.7) + (keywordScore * 0.3);
+            }
+        }
+
+        // ============================================================================
+        // FAQ DATABASE CLASS - Manages all the questions and answers
+        // ============================================================================
+        
+        /**
+         * Class to manage FAQ database and find best matches
+         * Uses COMPOSITION - it contains a MatcherStrategy object
+         */
+        class FAQDatabase {
+            /**
+             * Constructor - sets up the database
+             * @param {Array} faqData - List of all FAQ questions/answers
+             * @param {MatcherStrategy} matcher - The matcher to use (polymorphism!)
+             */
+            constructor(faqData, matcher) {
+                this.faqData = faqData;
+                // POLYMORPHISM: Can accept any MatcherStrategy subclass
+                this.matcher = matcher;
+                this.CONFIDENCE_THRESHOLD = 0.3; // Minimum score to accept answer
+            }
+            
+            /**
+             * Find the best matching FAQ for user's question
+             * @param {string} userInput - What the user asked
+             * @returns {object} - Best match with score
+             */
+            findBestMatch(userInput) {
+                let bestMatch = null;
+                let bestScore = 0;
+                
+                // Check each FAQ question
+                for (let faq of this.faqData) {
+                    // POLYMORPHISM: matcher.calculateScore works with any MatcherStrategy!
+                    const score = this.matcher.calculateScore(userInput, faq);
+                    
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestMatch = faq;
+                    }
+                }
+                
+                return { match: bestMatch, score: bestScore };
+            }
+            
+            /**
+             * Get answer for user's question
+             * @param {string} userInput - What the user asked
+             * @returns {string} - The answer
+             */
+            getResponse(userInput) {
+                const { match, score } = this.findBestMatch(userInput);
+                
+                // If score is high enough, return the answer
+                if (match && score >= this.CONFIDENCE_THRESHOLD) {
+                    return match.answer;
+                } else {
+                    // Score too low, return default message
+                    return HELPLINE_MESSAGE;
+                }
+            }
+        }
+
+        // ============================================================================
+        // CHATBOT CLASS - Main chatbot that coordinates everything
+        // ============================================================================
+        
+        /**
+         * Main Chatbot class
+         * Uses COMPOSITION - contains FAQDatabase
+         */
+        class Chatbot {
+            /**
+             * Constructor - creates a chatbot with FAQ database
+             */
+            constructor() {
+                // Create matcher (polymorphism - can use any MatcherStrategy!)
+                const matcher = new HybridMatcher();
+                // Create database with matcher (composition!)
+                this.faqDatabase = new FAQDatabase(FAQ_DATA, matcher);
+            }
+            
+            /**
+             * Process user's question and return answer
+             * @param {string} userInput - What the user asked
+             * @returns {string} - The answer
+             */
+            processQuery(userInput) {
+                // Simple validation function
+                if (!userInput || userInput.trim().length === 0) {
+                    return "Please ask me a question!";
+                }
+                
+                // Get response from database
+                return this.faqDatabase.getResponse(userInput.trim());
+            }
+        }
+
+        // ============================================================================
+        // UTILITY FUNCTIONS - Helper functions to make things easier
+        // ============================================================================
+        
+        /**
+         * Add a message to the chat display
+         * @param {string} text - Message text
+         * @param {string} type - 'user' or 'bot'
+         */
+        function addMessage(text, type) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.textContent = text;
+            
+            messageDiv.appendChild(contentDiv);
+            chatMessages.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        /**
+         * Handle Enter key press
+         */
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+        
+        /**
+         * Ask a question from suggestion chips
+         */
+        function askQuestion(question) {
+            document.getElementById('userInput').value = question;
+            sendMessage();
+        }
+
+        // ============================================================================
+        // MAIN FUNCTION - This runs when user clicks Send
+        // ============================================================================
+        
+        // Create chatbot instance (using our Chatbot class!)
+        const chatbot = new Chatbot();
+        
+        /**
+         * Send message function - called when user clicks Send button
+         */
+        function sendMessage() {
+            const userInput = document.getElementById('userInput');
+            const message = userInput.value.trim();
+            
+            if (!message) return;
+            
+            // Add user's message to chat
+            addMessage(message, 'user');
+            userInput.value = '';
+            
+            // Process query using chatbot (this uses all our OOP classes!)
+            const response = chatbot.processQuery(message);
+            
+            // Add bot's response to chat
+            setTimeout(() => {
+                addMessage(response, 'bot');
+            }, 300);
+        }
+
+        // Add welcome message when page loads
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                addMessage("Try asking me about flight time, range, GPS, camera, or speed!", 'bot');
+            }, 500);
+        });
+    </script>
 </body>
 </html>
-

@@ -38,3 +38,7 @@ Thumbs.db
 *.tmp
 *.bak
 
+# Archives
+*.zip
+*.rar
+
